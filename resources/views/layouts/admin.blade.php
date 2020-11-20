@@ -95,13 +95,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                <a href="{{ route('role.index')}}" class="nav-link">
                                         <i class="fas fa-bomb nav-icon"></i>
                                         <p>Roles</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{  route('permission.index') }}" class="nav-link">
                                         <i class="fas fa-bomb nav-icon"></i>
                                         <p>Permissions</p>
                                     </a>
@@ -115,7 +115,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <a href="{{  route('user.profile') }}" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Profile
@@ -137,7 +137,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a class="nav-link" href="{{ route('user.getPasswordPage') }}">
                             <i class="fas fa-lock nav-icon"></i>
                             <p>Change Password</p>
                             </a>
@@ -175,7 +175,7 @@
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active"></li>
+                                <li class="breadcrumb-item active">@yield('title')</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -186,7 +186,8 @@
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid">
-
+                    @include('partials.alert')
+                    @yield('content')
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content -->

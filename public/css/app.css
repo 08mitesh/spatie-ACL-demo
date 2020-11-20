@@ -48229,3 +48229,14 @@ readers do not read off random characters that represent icons */
   font-weight: 900;
 }
 
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #fff;
+  background: #c81b1b;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
