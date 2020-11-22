@@ -27,6 +27,11 @@ class RoleController extends Controller
         return view('role.index',['roles'=>$roles]);
     }
 
+    public function getAll(){
+        $roles = Role::all();
+        return response()->json(['roles'=>$roles],200);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -8,10 +8,14 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
-Vue.component('role',require('../components/role.vue').default);
-Vue.component('edit-role',require('../components/editRole.vue').default);
 
+require('../components');
 
+import moment from 'moment';
+
+Vue.filter("date",function(created){
+  return moment(created).format('MMMM Do YYYY, h:mm:ss a');
+})
 
 // ES6 Modules or TypeScript Sweet alert
 import Swal from 'sweetalert2'
