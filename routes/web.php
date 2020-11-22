@@ -44,4 +44,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //axios routes
 Route::get('/getAllPermissions','PermissionController@getAllPermission');
 Route::post('/postRole','RoleController@store');
+Route::post('/updateRole/{role}','RoleController@update');
+Route::get('/getAssociatedRolesPermissions','RoleController@getAssociatedRolesPermissions');
+Route::get('/getAssociatedRolesPermissions/{role_id}','RoleController@getAssociatedRolesPermissions');
 

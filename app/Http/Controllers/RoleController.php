@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
+
 
 class RoleController extends Controller
 {
@@ -79,7 +81,16 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        // $role = $this->role::find($id);
+        // $permissions = $role->getAllPermissions();
+
+        // $data = [
+        //     'role_name' => $role->name,
+        //     'permissions' => $permissions
+        // ];
+      
+        return view('role.edit',['role_id'=>$id]);
     }
 
     /**
@@ -89,9 +100,39 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $role)
     {
-        //
+        $role = $this->role::find($role);
+        $role->update([
+            'name' => $request['name']
+        ]);
+
+        //sync permission if user has revoked any permission for respective role
+        $role->syncPermissions($request['permissions']);
+
+        /*
+
+            //Get the existing permissions and will revoke if any present in revoke array.
+            $permissions = $role->getAllPermissions();
+
+            foreach($permissions as $permision)
+                $oldPermission[] = $permision['name']; 
+            
+            $permissionsToRevoke = array_diff($oldPermission,$request['permissions']);
+
+            if($permissionsToRevoke){
+                foreach($permissionsToRevoke as $revokePermission){
+                    $role->revokePermissionTo($revokePermission);       
+                }
+            }
+
+            // Adding new permissions
+            if($request->has('permissions'))
+            {
+                $role->givePermissionTo($request['permissions']);
+            }
+        */   
+        return response('success',200);
     }
 
     /**
@@ -104,4 +145,20 @@ class RoleController extends Controller
     {
         //
     }
+
+    public function getAssociatedRolesPermissions($role_id)
+    {
+        $role = $this->role::find($role_id);
+        $permissions = $role->getAllPermissions();
+
+        $data = [
+            'name' => $role->name,
+            'permissions' => $permissions
+        ];
+
+        return response()->json($data,200);
+      
+    }
+
+    
 }
