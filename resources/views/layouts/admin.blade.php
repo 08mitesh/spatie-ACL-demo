@@ -18,6 +18,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    {{-- <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css"> --}}
+
 </head>
 <body class="sidebar-mini" style="height: auto;">
     <div class="wrapper" id="app">
@@ -85,6 +88,7 @@
                                 </p>
                             </a>
                         </li>
+                        @role('Admin')
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-cogs"></i>
@@ -114,6 +118,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @endrole
                         <li class="nav-item">
                         <a href="{{  route('user.profile') }}" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>

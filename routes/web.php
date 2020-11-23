@@ -35,7 +35,7 @@ Route::get('/password','UserController@getPasswordPage')->name('user.getPassword
 
 Route::post('/postProfile','UserController@postProfile')->name('user.postProfile');
 
-Route::post('/postProfile','UserController@updatePassword')->name('user.updatePassword');
+Route::post('/updatePassword','UserController@updatePassword')->name('user.updatePassword');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -50,4 +50,5 @@ Route::post('/postRole','RoleController@store');
 Route::post('/updateRole/{role}','RoleController@update');
 Route::get('/getAssociatedRolesPermissions','RoleController@getAssociatedRolesPermissions');
 Route::get('/getAssociatedRolesPermissions/{role_id}','RoleController@getAssociatedRolesPermissions');
+Route::post('/createUser','UserController@store');
 

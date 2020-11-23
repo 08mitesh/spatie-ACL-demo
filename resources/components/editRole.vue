@@ -86,7 +86,7 @@ export default {
                     title: 'Role updated',
                     text: 'Your Role has been updated',
                 })
-                // window.location = "/role";
+                window.location = "/role";
             }).catch(()=>{
                 swal.fire({
                     icon: 'error',

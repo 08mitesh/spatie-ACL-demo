@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
@@ -19,9 +21,13 @@ class UserController extends Controller
 
     public function getAllUsers()
     {
-        $user = User::all();
+        $users = User::with('roles')->get();
 
-        return response()->json(['users' => $user],200);
+        //$roles = $user->getAllPermissions();
+
+        // dd($members);
+
+        return response()->json(['users' => $users],200);
     }
 
     /**
@@ -42,7 +48,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // dd($request->all());
+        $user = User::create([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'phone' => $request->phone,
+            'password' =>bcrypt($request->password)
+        ]);
+
+        if($request['role']){
+            $user->syncRoles($request['role']);
+        }
+        if($request['permissions']){
+            $user->syncPermissions($request['permissions']);
+        }
+
+        return response("success",200);
     }
 
     /**

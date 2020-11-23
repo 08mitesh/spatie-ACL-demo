@@ -9,6 +9,9 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 
+import Multiselect from 'vue-multiselect'
+Vue.component('multiselect', Multiselect)
+
 require('../components');
 
 import moment from 'moment';

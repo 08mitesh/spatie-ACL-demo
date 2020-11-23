@@ -39,7 +39,11 @@
                         <tr v-for="user in users" :key="user.id">
                             <td>{{ user.id }}</td>
                             <td> {{ user.name }}</td>
-                            <td></td>
+                            <td >
+                                <!-- <div v-for="role in user.roles" :key="role.id"> -->
+                                    <b-button v-for="role in user.roles" :key="role.id" variant="info" size="sm">{{role.name}}</b-button>
+                                <!-- </div> -->
+                            </td>
                             <td>{{ user.email }}</td>
                             <td>
                                 <button class="btn btn-sm btn-info"> <i class="fa fa-eye"></i> View</button>
@@ -88,13 +92,29 @@
 
                         <div class="form-group">
                             <label> Choose Role </label>
-                            <b-form-select
+                            <b-form-select multiple
                                 v-model="form.role"
                                 :options="roles"
                                 text-field="name"
-                                value-field="id"
+                                value-field="name"
 
                             ></b-form-select>
+                            <!-- <label class="typo__label">Tagging</label> -->
+                                <!-- <multiselect v-model="form.role"  
+                                tag-placeholder="Add this as new tag" 
+                                placeholder="Search or add a tag" 
+                                label="name" track-by="code" :options="roles" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+                                <pre class="language-json"><code>{{  value }}</code></pre> -->
+                               <!-- <b-form-select v-model="form.role" text-field="name" :options="roles" value-field="id" multiple :select-size="4"></b-form-select> -->
+                                <!-- <div class="mt-3">Selected: <strong>{{ selected }}</strong></div> -->
+                                <!-- <component 
+                                     v-model="roles" 
+                                     :all-values="roles"
+                                    :is-multi="true"
+                                    :is-search="true"
+                                    is="multiselect" 
+                                   >
+                                     </component> -->
                             <has-error :form="form" field="role"></has-error>
 
                         </div>
@@ -122,7 +142,7 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-lg btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-lg btn-primary">Save User</button>
+                    <button type="submit"  @click.prevent="createUser()" class="btn btn-lg btn-primary">Save User</button>
                 </div>
                 </div>
             </div>
@@ -132,6 +152,7 @@
 
 <script>
 export default {
+    
     data() {
         return {
             users: [],
@@ -143,14 +164,20 @@ export default {
                 'password': '',
                 'email': '',
                 'permissions': [],
-                'role': 1,
-            })
+                'role': [],
+            }),
+           
         }
     },
     methods:{
         getUsers(){
             axios.get('/getAllUsers').then((response) =>{
                 this.users = response.data.users
+                // this.users.forEach(element => {
+                //     element.forEach(roles=>{
+                //         console.log(roles)
+                //     })
+                // });
             }).catch(()=>{
                // this.$toastr.e("Cannot load users", "Error");
             })
@@ -165,6 +192,23 @@ export default {
                 this.permissions = response.data.permissions
             });
         },
+        createUser(){
+            this.form.post("/createUser").then(()=>{
+                swal.fire({
+                    icon: 'success',
+                    title: 'User Created Successfully',
+                    text: 'User Created Successfully',
+                })
+                // window.location = "/user";
+            }).catch(()=>{
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                });
+            });
+            
+        }
     },
     created(){
         this.getUsers();
