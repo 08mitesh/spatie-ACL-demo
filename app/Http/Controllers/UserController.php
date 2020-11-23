@@ -153,4 +153,48 @@ class UserController extends Controller
 
         return redirect()->back()->with('success','Password updated successfully');
     }
+
+    public function getSelectedUserDetails($user_id)
+    {
+        $user = User::find($user_id);
+        
+        $roles = $user->roles->pluck('name')->toArray();
+
+        $permissions = $user->permissions->pluck('name')->toArray();
+
+        $data = [
+            'user' => $user,
+            'permissions' => $permissions,
+            'roles'=>$roles
+        ];
+
+        return response()->json($data,200);
+    }
+
+    public function updateSelectedUser(Request $request, $user_id){
+       
+        $user = User::find($user_id);
+
+        $updateData = [
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'phone' => $request['phone']
+        ]
+        
+        $user->update($updateData);
+
+        if($request['password']){
+            $user->update([
+                'password' => bcrypt($request->newPassword)
+            ]);
+        }
+
+        //sync permission if user has revoked any permission for respective role
+        $user->syncPermissions($request['permissions']);
+
+        $user->syncRoles($request['roles']);
+
+
+        return response()->json(['success'],200);
+    }
 }

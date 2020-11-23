@@ -51,4 +51,6 @@ Route::post('/updateRole/{role}','RoleController@update');
 Route::get('/getAssociatedRolesPermissions','RoleController@getAssociatedRolesPermissions');
 Route::get('/getAssociatedRolesPermissions/{role_id}','RoleController@getAssociatedRolesPermissions');
 Route::post('/createUser','UserController@store');
+Route::get('/getSelectedUserDetails/{user_id}','UserController@getSelectedUserDetails');
+Route::post('/updateSelectedUser/{user_id}','UserController@updateSelectedUser');
 

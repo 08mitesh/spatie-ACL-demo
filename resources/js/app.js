@@ -9,6 +9,7 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 
+
 import Multiselect from 'vue-multiselect'
 Vue.component('multiselect', Multiselect)
 
@@ -41,6 +42,10 @@ import { Form, HasError, AlertError } from 'vform'
 window.Form = Form
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
+
+
+// import Permissions from '../assets/js/mixins/Permissions';
+// Vue.mixin(Permissions);
 
   const app = new Vue({
     el:'#app'
