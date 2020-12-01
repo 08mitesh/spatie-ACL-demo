@@ -4,7 +4,7 @@
             <div class="card-header ui-sortable-handle" style="cursor: move;">
                 <h3 class="card-title">
                     <i class="fas fa-users mr-1"></i>
-                    Users
+                    Users 
                 </h3>
                 <div class="card-tools">
                     <ul class="nav nav-pills ml-auto">
@@ -92,13 +92,19 @@
 
                         <div class="form-group">
                             <label> Choose Role </label>
-                            <b-form-select multiple
+                            <!-- <b-form-select multiple
                                 v-model="form.role"
                                 :options="roles"
                                 text-field="name"
                                 value-field="name"
 
-                            ></b-form-select>
+                            ></b-form-select> -->
+                             <multiselect v-model="form.role" 
+                            :options="roles" :multiple="true" 
+                            :taggable="true" @tag="addTag"
+                            :close-on-select="false" :clear-on-select="false" 
+                            :preserve-search="true" placeholder="Pick some"
+                             label="name" track-by="name" :preselect-first="true"></multiselect>
                             <!-- <label class="typo__label">Tagging</label> -->
                                 <!-- <multiselect v-model="form.role"  
                                 tag-placeholder="Add this as new tag" 
@@ -181,13 +187,21 @@
 
                         <div class="form-group">
                             <label> Choose Role </label>
-                            <b-form-select multiple
+                            <!-- <b-form-select multiple
                                 v-model="editform.role"
                                 :options="roles"
                                 text-field="name"
                                 value-field="name"
 
-                            ></b-form-select>
+                            ></b-form-select> -->
+                            <multiselect v-model="editform.role" 
+                            :options="roles" :multiple="true" 
+                            :taggable="true" @tag="addTag"
+                            :close-on-select="false" :clear-on-select="false" 
+                            :preserve-search="true" placeholder="Select Role"
+                             label="name" track-by="name" :preselect-first="true">
+    <!-- <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template> -->
+  </multiselect>
                             <!-- <label class="typo__label">Tagging</label> -->
                                 <!-- <multiselect v-model="form.role"  
                                 tag-placeholder="Add this as new tag" 
@@ -241,9 +255,13 @@
 
 <script>
 export default {
-    
+//     components: {
+//     multiselect: window.Multiselect
+//   },
+    props: ['create_permission'],
     data() {
         return {
+            createpermission: this.create_permission,
             users: [],
             roles: [],
             permissions:[],
@@ -253,7 +271,7 @@ export default {
                 'password': '',
                 'email': '',
                 'permissions': [],
-                'role': [],
+                'role': '',
             }),
 
              editform: new Form({
@@ -263,7 +281,7 @@ export default {
                 'password': '',
                 'email': '',
                 'permissions': [],
-                'role': [],
+                'role': '',
             }),
            
         }
@@ -293,6 +311,7 @@ export default {
         },
         createUser(){
             this.form.post("/createUser").then(()=>{
+                // this.form.reset();
                 swal.fire({
                     icon: 'success',
                     title: 'User Created Successfully',
@@ -316,7 +335,7 @@ export default {
                 this.editform.email = response.data.user.email
                 this.editform.phone = response.data.user.phone
                 for (var i = 0; i < response.data.roles.length; i++) {
-                         this.editform.role.push(response.data.roles[i]);
+                         this.editform.role.push(response.data.user.roles[i]);
                     }
                 for (var i = 0; i < response.data.permissions.length; i++) {
                          this.editform.permissions.push(response.data.permissions[i]);
@@ -332,7 +351,7 @@ export default {
         },
         updateSelectedUser(id){
             console.log(id)
-            this.form.post("/updateSelectedUser/"+id).then(()=>{
+            this.editform.post("/updateSelectedUser/"+id).then(()=>{
                 swal.fire({
                     icon: 'success',
                     title: 'User Edited Successfully',
@@ -355,7 +374,15 @@ export default {
             this.editform.phone = ''
             this.editform.role = []
             this.editform.permissions = []
-        }
+        },
+        addTag (newTag) {
+            const tag = {
+                name: newTag,
+                code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+            }
+            this.options.push(tag)
+            this.value.push(tag)
+            }
     },
     created(){
         this.getUsers();

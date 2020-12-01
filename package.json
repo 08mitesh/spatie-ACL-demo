@@ -23,6 +23,8 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "@casl/ability": "^4.1.6",
+        "@casl/vue": "^1.1.1",
         "@fortawesome/fontawesome-free": "^5.15.1",
         "admin-lte": "^3.0.5",
         "bootstrap-vue": "^2.19.0",

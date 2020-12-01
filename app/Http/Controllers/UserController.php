@@ -14,6 +14,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('role:Admin', ['only' => ['index']]);
+    }
+
     public function index()
     {
         return view('user.index'); 
@@ -22,10 +27,6 @@ class UserController extends Controller
     public function getAllUsers()
     {
         $users = User::with('roles')->get();
-
-        //$roles = $user->getAllPermissions();
-
-        // dd($members);
 
         return response()->json(['users' => $users],200);
     }
@@ -48,8 +49,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
-        // dd($request->all());
         $user = User::create([
             'name'=>$request->name,
             'email'=>$request->email,
@@ -57,12 +56,17 @@ class UserController extends Controller
             'password' =>bcrypt($request->password)
         ]);
 
+        // $activity = Activity::all()->last();
+        
         if($request['role']){
-            $user->syncRoles($request['role']);
+            foreach($request['role'] as $role):
+                $rolesToSync[]=$role['name'];
+            endforeach;
+            
+            $user->syncRoles($rolesToSync);
         }
-        if($request['permissions']){
-            $user->syncPermissions($request['permissions']);
-        }
+
+        $user->syncPermissions($request['permissions']);
 
         return response("success",200);
     }
@@ -172,16 +176,14 @@ class UserController extends Controller
     }
 
     public function updateSelectedUser(Request $request, $user_id){
-       
+    
         $user = User::find($user_id);
-
-        $updateData = [
+        
+        $user->update([
             'name' => $request['name'],
             'email' => $request['email'],
             'phone' => $request['phone']
-        ]
-        
-        $user->update($updateData);
+        ]);
 
         if($request['password']){
             $user->update([
@@ -190,10 +192,16 @@ class UserController extends Controller
         }
 
         //sync permission if user has revoked any permission for respective role
+        if($request['role']){
+            foreach($request['role'] as $role):
+                $rolesToSync[]=$role['name'];
+            endforeach;
+            
+            $user->syncRoles($rolesToSync);
+        }
+        
+        //since permission is directly passed with name only 
         $user->syncPermissions($request['permissions']);
-
-        $user->syncRoles($request['roles']);
-
 
         return response()->json(['success'],200);
     }

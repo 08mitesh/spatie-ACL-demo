@@ -8,7 +8,10 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
-
+// import { defineAbility } from '@casl/ability';
+// Vue.use(defineAbility)
+// import { Can } from '@casl/vue';
+// Vue.component('Can', Can);
 
 import Multiselect from 'vue-multiselect'
 Vue.component('multiselect', Multiselect)
