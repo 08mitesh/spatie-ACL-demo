@@ -36,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users" :key="user.id">
+                        <tr v-for="user in users.data" :key="user.id">
                             <td>{{ user.id }}</td>
                             <td> {{ user.name }}</td>
                             <td >
@@ -56,6 +56,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <pagination :data="users" 
+                            :align="alignment"
+                            :show-disabled="showDisabled" 
+                            :limit="limitRange"
+                            @pagination-change-page="getUsers"></pagination>
             </div>
         </div>
         <div class="modal fade" id="createUser" tabindex="-1" role="dialog" aria-labelledby="createUserModalLabel" aria-hidden="true">
@@ -261,8 +266,11 @@ export default {
     props: ['create_permission'],
     data() {
         return {
+            showDisabled:true,
+            alignment:"center",
+            limitRange:2,
             createpermission: this.create_permission,
-            users: [],
+            users: {},
             roles: [],
             permissions:[],
             form: new Form({
@@ -287,8 +295,9 @@ export default {
         }
     },
     methods:{
-        getUsers(){
-            axios.get('/getAllUsers').then((response) =>{
+        getUsers(page = 1){
+            axios.get('/getAllUsers?page='+page).then((response) =>{
+                console.log(response)
                 this.users = response.data.users
                 // this.users.forEach(element => {
                 //     element.forEach(roles=>{
@@ -385,9 +394,12 @@ export default {
             }
     },
     created(){
-        this.getUsers();
+       
         this.getRoles();
         this.getAllPermission();
+    },
+    mounted(){
+     this.getUsers();   
     }
 }
 </script>
