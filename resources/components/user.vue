@@ -245,7 +245,10 @@
                                 {{ option.name }}
                             </b-form-checkbox>
                         </b-form-group>
-
+                        <b> Approved </b>
+                        <b-form-checkbox v-model="editform.is_approved" name="check-button" switch>
+                            
+                        </b-form-checkbox>
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -290,6 +293,7 @@ export default {
                 'email': '',
                 'permissions': [],
                 'role': '',
+                'is_approved':''
             }),
            
         }
@@ -343,6 +347,7 @@ export default {
                 this.editform.id = response.data.user.id
                 this.editform.email = response.data.user.email
                 this.editform.phone = response.data.user.phone
+                this.editform.is_approved = response.data.user.is_approved == 1 ? true : false
                 for (var i = 0; i < response.data.roles.length; i++) {
                          this.editform.role.push(response.data.user.roles[i]);
                     }

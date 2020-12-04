@@ -9,6 +9,11 @@
     <div class="card">
         <div class="card-header">{{ __('Login') }}</div>
         <div class="card-body login-card-body">
+            @if(session()->has('message'))
+                <p class="alert alert-info">
+                    {{ session()->get('message') }}
+                </p>
+            @endif
             <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="input-group mb-3">

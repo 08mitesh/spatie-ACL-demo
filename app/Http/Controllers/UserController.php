@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\UserApprovedNotification;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -178,17 +179,29 @@ class UserController extends Controller
     public function updateSelectedUser(Request $request, $user_id){
     
         $user = User::find($user_id);
+
+        //get the value before update
+        $is_approved = $user->is_approved;
         
         $user->update([
             'name' => $request['name'],
             'email' => $request['email'],
-            'phone' => $request['phone']
+            'phone' => $request['phone'],
+            'is_approved'=>($request['is_approved'] == 'true' ? 1 : 0)
         ]);
 
         if($request['password']){
             $user->update([
                 'password' => bcrypt($request->newPassword)
             ]);
+        }
+
+        if($is_approved == 0 && $user->is_approved == 1){
+            $user->update([
+               'approved_by' => auth()->user()->id
+            ]);
+
+            $user->notify(New UserApprovedNotification());
         }
 
         //sync permission if user has revoked any permission for respective role
