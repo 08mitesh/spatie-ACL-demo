@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\SendNotificationOnUserRegistration;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
@@ -71,14 +72,15 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        
+        event(new SendNotificationOnUserRegistration($user));
+        // $administrators = User::whereHas('roles',function($q){
+        //     $q->where('name','Admin');
+        // })->get();
 
-        $administrators = User::whereHas('roles',function($q){
-            $q->where('name','Admin');
-        })->get();
-
-        foreach($administrators as $administrator):
-            $administrator->notify(New NewUserNotificationToAdmin($user));
-        endforeach;
+        // foreach($administrators as $administrator):
+        //     $administrator->notify(New NewUserNotificationToAdmin($user));
+        // endforeach;
 
         return $user;
 
