@@ -15,5 +15,5 @@ This application is going to help with the spatie [laravel-permission](https://s
 ## Key points
 
 - On new user registration, Admin will get notified via email. (Used event and listener) [Reference](https://www.youtube.com/watch?v=DvoaU6cQQHM)
-- User want be able to login unless admin approves them. [Refrence] (https://www.youtube.com/watch?v=uiTi01Ml_OU)
+- User want be able to login unless admin approves them. [Reference](https://www.youtube.com/watch?v=uiTi01Ml_OU)
 - Storing which admin reference like user has been approved by which admin
